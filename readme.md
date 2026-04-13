@@ -35,7 +35,13 @@ module "oci_network_load_balancer" {
       policy = "FIVE_TUPLE"
       health_checker = {
         port     = 80
-        protocol = "TCP"
+        protocol = "HTTP"
+        interval_in_millis = 10000
+        timeout_in_millis = 3000
+        retries = 3
+        # mandatory when HTTP
+        return_code = 200
+        url_path = "/"
       }
     }
   ]

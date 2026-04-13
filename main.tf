@@ -65,15 +65,15 @@ resource "oci_network_load_balancer_backend_set" "backend_set" {
         transport_protocol = try(dns.value.transport_protocol, null)
       }
     }
-    interval_in_millis  = try(each.value.health_checker.interval_in_millis, null)
-    port                = try(each.value.health_checker.port, null)
+    interval_in_millis  = each.value.health_checker.interval_in_millis
+    port                = each.value.health_checker.port
     protocol            = each.value.health_checker.protocol
     request_data        = try(each.value.health_checker.request_data, null)
     response_body_regex = try(each.value.health_checker.response_body_regex, null)
     response_data       = try(each.value.health_checker.response_data, null)
-    retries             = try(each.value.health_checker.retries, null)
+    retries             = each.value.health_checker.retries
     return_code         = try(each.value.health_checker.return_code, null)
-    timeout_in_millis   = try(each.value.health_checker.timeout_in_millis, null)
+    timeout_in_millis   = each.value.health_checker.timeout_in_millis
     url_path            = try(each.value.health_checker.url_path, null)
   }
   ip_version                                  = try(each.value.ip_version, null)
@@ -86,7 +86,7 @@ resource "oci_network_load_balancer_backend_set" "backend_set" {
 }
 
 resource "oci_network_load_balancer_listener" "listener" {
-  depends_on = [ oci_network_load_balancer_network_load_balancer.load_balancer ]
+  depends_on = [ oci_network_load_balancer_backend_set.backend_set ]
   for_each = { for l in var.listeners : l.name => l }
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.load_balancer.id
   default_backend_set_name = each.value.default_backend_set_name
